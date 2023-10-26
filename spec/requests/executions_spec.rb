@@ -62,11 +62,11 @@ describe "/executions" do
   describe "PATCH /update" do
     context "with valid parameters" do
       before {
-        execution.user.role.update!(name: "execution.update")
+        execution.user.roles.update!(name: "execution.update")
       }
 
       let(:new_params) {
-        { user_id: create(:user, role_id: task.role_id).id }
+        { user_id: create(:user, roles: [task.role]).id }
       }
 
       it "updates the requested record" do
@@ -97,7 +97,7 @@ describe "/executions" do
 
     context "with invalid role" do
       before {
-        execution.user.role.update!(name: "invalid.role")
+        execution.user.roles.update!(name: "invalid.role")
       }
 
       it "does not updates the record" do
@@ -116,7 +116,7 @@ describe "/executions" do
   describe "DELETE /destroy" do
     context "with valid role" do
       it "removes the requested record" do
-        execution.user.role.update!(name: "execution.destroy")
+        execution.user.roles.update!(name: "execution.destroy")
 
         expect {
           delete task_execution_path(task, execution, user_id:)
@@ -126,7 +126,7 @@ describe "/executions" do
 
     context "with invalid role" do
       it "doesn't remove the requested record" do
-        execution.user.role.update!(name: "invalid.role")
+        execution.user.roles.update!(name: "invalid.role")
 
         expect {
           delete task_execution_path(task, execution, user_id:)
