@@ -27,7 +27,7 @@ class RolesController < ApplicationController
   end
 
   def set_role
-    @role = @user.role
+    @role = @user.roles
   end
 
   def role_params
