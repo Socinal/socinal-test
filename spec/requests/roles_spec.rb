@@ -13,7 +13,7 @@ describe "/roles" do
     }
   }
 
-  let(:user) { create(:user) }
+  let(:user) { FactoryBot.create(:user, :user_with_roles) }
 
   describe "GET /show" do
     it "returns a successful response" do
@@ -30,22 +30,25 @@ describe "/roles" do
 
       it "updates the requested record" do
         patch user_role_path(user), params: { role: new_params }
-        user.role.reload
-        expect(user.role.name).to eq(new_params[:name])
+        user.roles.reload
+        expect(user.roles.last.name).to eq(new_params[:name])
       end
+
+      let(:firstrole) { user.roles.first }
 
       it "returns a successful status" do
         patch user_role_path(user), params: { role: new_params }
-        user.role.reload
+        user.roles.reload
         expect(response).to be_successful
       end
+
     end
 
     context "with invalid parameters" do
       it "does not updates the record" do
         patch user_role_path(user), params: { role: invalid_params }
-        user.role.reload
-        expect(user.role.name).not_to eq(invalid_params[:name])
+        user.roles.reload
+        expect(user.roles.last.name).not_to eq(invalid_params[:name])
       end
 
       it "returns an error response status" do

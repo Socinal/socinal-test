@@ -4,7 +4,6 @@ describe "/users" do
   let(:valid_params) {
     {
       nickname: "john_doe",
-      role_id: create(:role).id
     }
   }
 
