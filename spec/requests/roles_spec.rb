@@ -13,7 +13,7 @@ describe "/roles" do
     }
   }
 
-  let(:user) { create(:user) }
+  let(:user) { FactoryBot.create(:user, :user_with_roles) }
 
   describe "GET /show" do
     it "returns a successful response" do
@@ -22,34 +22,29 @@ describe "/roles" do
     end
   end
 
-  describe "PATCH /update" do
+  describe "POST /create" do
     context "with valid parameters" do
-      let(:new_params) {
-        { name: "user.destroy" }
-      }
-
-      it "updates the requested record" do
-        patch user_role_path(user), params: { role: new_params }
-        user.role.reload
-        expect(user.role.name).to eq(new_params[:name])
+      it "creates a new record" do
+        expect {
+          post user_role_path(user), params: { role: valid_params }
+        }.to change(User, :count).by(1)
       end
 
-      it "returns a successful status" do
-        patch user_role_path(user), params: { role: new_params }
-        user.role.reload
+      it "returns a successful response status" do
+        post user_role_path(user), params: { role: valid_params }
         expect(response).to be_successful
       end
     end
 
     context "with invalid parameters" do
-      it "does not updates the record" do
-        patch user_role_path(user), params: { role: invalid_params }
-        user.role.reload
-        expect(user.role.name).not_to eq(invalid_params[:name])
+      it "does not create a new record" do
+        expect {
+          post user_role_path(user), params: { role: invalid_params }
+        }.not_to change(user.roles, :count)
       end
 
       it "returns an error response status" do
-        patch user_role_path(user), params: { role: invalid_params }
+        post user_role_path(user), params: { role: invalid_params }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end

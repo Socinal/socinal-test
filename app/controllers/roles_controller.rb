@@ -1,21 +1,24 @@
 class RolesController < ApplicationController
   before_action :set_user
-  before_action :set_role, only: [:show, :update, :destroy]
+  before_action :set_role, only: [:show, :create, :destroy]
 
   def show
-    render @role
+    render @roles
   end
 
-  def update
-    if @role.update(role_params)
-      render json: @role
+  def create
+    @user.roles.create(role_params)
+
+    if @user.save
+      render json: @user, status: :created
     else
-      render json: @role.errors.messages, status: :unprocessable_entity
+      render json: @user.errors.messages, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @role.destroy
+    role = roles.find_by(role_params)
+    @roles.destroy(role)
 
     head :no_content
   end
@@ -27,7 +30,7 @@ class RolesController < ApplicationController
   end
 
   def set_role
-    @role = @user.role
+    @roles = @user.roles
   end
 
   def role_params
