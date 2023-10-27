@@ -21,7 +21,7 @@ class Execution < ApplicationRecord
   end
 
   def try_with_role(role, user)
-    if user.roles.include?(role)
+    if user.roles.pluck(:name).include?(role)
       yield
     else
       errors.add(:user, "doesn't have a allowed role")
