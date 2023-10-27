@@ -4,6 +4,6 @@ FactoryBot.define do
   end
 
   trait :user_with_roles do
-    roles { build_list :role, 3 }
+    roles { build_list :role, 2 }
   end
 end
